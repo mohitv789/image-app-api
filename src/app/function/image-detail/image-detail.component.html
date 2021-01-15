@@ -1,0 +1,52 @@
+<div class="row">
+    <div class="col-xs-12">
+      <img
+        [src]="image.imagePath"
+        alt="{{ image.name }}"
+        class="img-responsive"
+        style="max-height: 300px;">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <h1>{{ image.name }}</h1>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="btn-group" appDropdown>
+        <button
+          type="button"
+          class="btn btn-primary dropdown-toggle">
+          Manage image <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          <!-- <li><a (click)="onAddToWishList()" style="cursor: pointer;">To Albums</a></li> -->
+          <li><a style="cursor: pointer;" (click)="onEditImage()">Edit Image</a></li>
+          <li><a style="cursor: pointer;" (click)="onDeleteImage()">Delete Image</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <span>Description : {{ image.description }}</span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <span>Place: {{ image.place }}</span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <ul class="list-group">
+        <li
+          class="list-group-item"
+          *ngFor="let component of image.components">
+         {{ component.person }} at ({{ component.place }})
+      </li>
+      </ul>
+    </div>
+  </div>
