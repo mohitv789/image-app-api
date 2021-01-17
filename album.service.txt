@@ -1,0 +1,38 @@
+import { Injectable } from "@angular/core";
+import { Subject } from 'rxjs';
+import { Store } from '@ngrx/store';
+import * as fromApp from '../store/app.reducer';
+import { Album } from "./album.model";
+
+@Injectable()
+export class AlbumService {
+  albumsChanged = new Subject<Album[]>();
+
+  private albums: Album[] = [];
+  constructor(private store: Store<fromApp.AppState>) {}
+
+  setAlbums(albums: Album[]) {
+    this.albums = albums;
+    this.albumsChanged.next(this.albums.slice());
+  }
+
+  getAlbums() {
+      return this.albums.slice();
+  }
+
+  getAlbum(index: number) {
+    return this.albums[index];
+  }
+
+
+  addAlbum(album: Album) {
+    this.albums.push(album);
+    this.albumsChanged.next(this.albums.slice());
+  }
+
+  deleteAlbum(index: number) {
+    this.albums.splice(index, 1);
+    this.albumsChanged.next(this.albums.slice());
+  }
+
+}

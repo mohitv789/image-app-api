@@ -14,7 +14,7 @@
   </div>
 
   <div class="row">
-    <div class="col-xs-12">
+    <div class="col-xs-6">
       <div class="btn-group" appDropdown>
         <button
           type="button"
@@ -29,24 +29,10 @@
       </div>
     </div>
   </div>
+
   <div class="row">
     <div class="col-xs-12">
       <span>Description : {{ image.description }}</span>
     </div>
   </div>
-  <div class="row">
-    <div class="col-xs-12">
-      <span>Place: {{ image.place }}</span>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-xs-12">
-      <ul class="list-group">
-        <li
-          class="list-group-item"
-          *ngFor="let component of image.components">
-         {{ component.person }} at ({{ component.place }})
-      </li>
-      </ul>
-    </div>
-  </div>
+

@@ -1,15 +1,15 @@
 import { Injectable } from "@angular/core";
-import { ImageComponent } from '../shared/breakdown.model';
-import { WishListService } from '../wishlist/wishlist.service';
 import { Image } from "./image.model";
 import { Subject } from 'rxjs';
+import { Store } from '@ngrx/store';
+import * as fromApp from '../store/app.reducer';
 
 @Injectable()
 export class ImageService {
   imagesChanged = new Subject<Image[]>();
 
   private images: Image[] = [];
-  constructor(private wlService: WishListService) {}
+  constructor(private store: Store<fromApp.AppState>) {}
 
   setImages(images: Image[]) {
     this.images = images;
@@ -24,9 +24,13 @@ export class ImageService {
     return this.images[index];
   }
 
-  addComponentsToWishList(components: ImageComponent[]) {
-    this.wlService.addComponents(components);
-  }
+  // addComponentsToWishList(components: ImageComponent[]) {
+  //   this.store.dispatch(new WishListActions.AddComponents(components));
+  // }
+
+  // addImagetoAlbum(index:number , image: Image) {
+  //   this.store.dispatch(new AlbumsActions.AddImageToAlbum({index,image}));
+  // }
 
   addImage(image: Image) {
     this.images.push(image);

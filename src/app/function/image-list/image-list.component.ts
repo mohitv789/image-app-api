@@ -1,8 +1,10 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { ImageService } from '../function.service';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import * as fromApp from '../../store/app.reducer';
 import { Image } from '../image.model'
 import { Subscription } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-image-list',
@@ -10,22 +12,27 @@ import { Router, ActivatedRoute } from '@angular/router';
   styleUrls: ['./image-list.component.css']
 })
 
-export class ImageListComponent implements OnInit {  
-  images: Image[];  
+
+export class ImageListComponent implements OnInit {
+  images: Image[];
   subscription: Subscription;
-  constructor(private imageService: ImageService,
-              private router: Router,
-              private route: ActivatedRoute) { }
+
+
+  constructor(private router: Router,
+              private route: ActivatedRoute,
+              private store: Store<fromApp.AppState>) {
+  }
 
   ngOnInit() {
-    this.subscription = this.imageService.imagesChanged
+    this.subscription = this.store.select('images')
+      .pipe(map(imagesState => imagesState.images))
       .subscribe(
         (images: Image[]) => {
           this.images = images;
         }
       );
-    this.images = this.imageService.getImages();
   }
+
   onNewImage() {
     this.router.navigate(['new'], {relativeTo: this.route});
   }

@@ -1,27 +1,17 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { FunctionComponent } from './function/function.component';
-import { WishlistComponent } from './wishlist/wishlist.component';
-import { ImageStartComponent } from './function/image-start/image-start.component';
-import { ImageDetailComponent } from './function/image-detail/image-detail.component';
-import { ImageEditComponent } from './function/image-edit/image-edit.component';
-import { ImageResolverService } from './function/function-resolver.service';
+import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: '/images', pathMatch: 'full' },
-  { path: 'images', component: FunctionComponent, children: [
-    { path: '', component: ImageStartComponent },
-    { path: 'new', component: ImageEditComponent },
-    { path: ':id', component: ImageDetailComponent,resolve: [ImageResolverService] },
-    { path: ':id/edit', component: ImageEditComponent,resolve: [ImageResolverService] },
-  ] },
-  { path: 'wishlist', component: WishlistComponent },
+  { path: 'images', loadChildren: () => import('./function/image.module').then(m => m.ImageModule)},
+  { path: 'albums', loadChildren: () => import('./album/album.module').then(m => m.AlbumModule)},
+  { path: 'auth', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)},
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(appRoutes)],
+  imports: [
+    RouterModule.forRoot(appRoutes, { preloadingStrategy: PreloadAllModules })
+  ],
   exports: [RouterModule]
 })
-export class AppRoutingModule {
-
-}
+export class AppRoutingModule {}

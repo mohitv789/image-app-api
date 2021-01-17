@@ -1,7 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Image } from '../image.model';
-import { ImageService } from '../function.service';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import * as fromApp from '../../store/app.reducer';
+import * as ImagesActions from '../store/image.actions';
+import { map, switchMap } from 'rxjs/operators';
+import { Album } from 'src/app/album/album.model';
 
 @Component({
   selector: 'app-image-detail',
@@ -12,34 +16,52 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 
 export class ImageDetailComponent implements OnInit {
   image: Image;
+  album: Album;
   id: number;
 
-  constructor(private imageService: ImageService,
-              private route: ActivatedRoute,
-              private router: Router) { }
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private store: Store<fromApp.AppState>
+  ) {}
+
 
   ngOnInit() {
     this.route.params
-      .subscribe(
-        (params: Params) => {
-          this.id = +params['id'];
-          this.image = this.imageService.getImage(this.id);
-        }
-      );
+      .pipe(
+        map(params => {
+          return +params['id'];
+        }),
+        switchMap(id => {
+          this.id = id;
+          return this.store.select('images');
+        }),
+        map(imagesState => {
+          return imagesState.images.find((image, index) => {
+            return index === this.id;
+          });
+        })
+      )
+      .subscribe(image => {
+        this.image = image;
+      });
   }
 
-  onAddToWishList() {
-    this.imageService.addComponentsToWishList(this.image.components);
-  }
+  // onAddToWishList() {
+  //   // this.recipeService.addIngredientsToShoppingList(this.recipe.ingredients);
+  //   this.store.dispatch(
+  //     new WishListActions.AddComponents(this.image.components)
+  //   );
+  // }
 
   onEditImage() {
-    this.router.navigate(['edit'], {relativeTo: this.route});
+    this.router.navigate(['edit'], { relativeTo: this.route });
     // this.router.navigate(['../', this.id, 'edit'], {relativeTo: this.route});
   }
 
   onDeleteImage() {
-    this.imageService.deleteImage(this.id);
+    // this.recipeService.deleteRecipe(this.id);
+    this.store.dispatch(new ImagesActions.DeleteImage(this.id));
     this.router.navigate(['/images']);
   }
-
 }

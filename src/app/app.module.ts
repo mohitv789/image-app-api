@@ -1,45 +1,34 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { AppRoutingModule } from './app-routing.module';
+import { HttpClientModule } from '@angular/common/http';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { StoreRouterConnectingModule } from '@ngrx/router-store';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
-import { FunctionComponent } from './function/function.component';
-import { ImageDetailComponent } from './function/image-detail/image-detail.component';
-import { ImageListComponent } from './function/image-list/image-list.component';
-import { ImageItemComponent } from './function/image-list/image-item/image-item.component';
-import { DropdownDirective } from './shared/dropdown.directive';
-import { WishlistComponent } from './wishlist/wishlist.component';
-import { WishlistEditComponent } from './wishlist/wishlist-edit/wishlist-edit.component';
-import { WishListService } from './wishlist/wishlist.service';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ImageEditComponent } from './function/image-edit/image-edit.component';
-import { ImageStartComponent } from './function/image-start/image-start.component';
-import { ImageService } from './function/function.service';
-import { HttpClientModule } from '@angular/common/http';
-
+import { AppRoutingModule } from './app-routing.module';
+import { SharedModule } from './shared/shared.module';
+import { CoreModule } from './core.module';
+import * as fromApp from './store/app.reducer';
+import { AuthEffects } from './auth/store/auth.effects';
+import { environment } from '../environments/environment';
+import { ImageEffects } from './function/store/image.effects';
+import { ProfileComponent } from './profile/profile.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HeaderComponent,
-    FunctionComponent,
-    ImageDetailComponent,
-    ImageListComponent,
-    ImageItemComponent,
-    DropdownDirective,
-    WishlistComponent,
-    WishlistEditComponent,
-    ImageEditComponent,
-    ImageStartComponent
-  ],
+  declarations: [AppComponent, HeaderComponent, ProfileComponent],
   imports: [
     BrowserModule,
-    FormsModule,
-    ReactiveFormsModule,
     HttpClientModule,
-    AppRoutingModule
+    AppRoutingModule,
+    StoreModule.forRoot(fromApp.appReducer),
+    EffectsModule.forRoot([AuthEffects, ImageEffects]),
+    StoreDevtoolsModule.instrument({ logOnly: environment.production }),
+    StoreRouterConnectingModule.forRoot(),
+    SharedModule,
+    CoreModule
   ],
-  providers: [ImageService,WishListService],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

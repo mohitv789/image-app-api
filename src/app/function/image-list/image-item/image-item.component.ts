@@ -10,7 +10,6 @@ import {ImageService } from "../../function.service";
 })
 
 export class ImageItemComponent implements OnInit {
-  
   @Input() image: Image;
   @Input() index: number;
   constructor(private imageService: ImageService) { }
